@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Car Price Prediction</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='car_icon.ico') }}">
+</head>
+  <head>
+    <title>Used Car Price Prediction</title>
+    
+    <style>
+      html, body {
+      min-height: 100%;
+      }
+      body, div, form, input, select, p { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 15px;
+      color: #eee;
+      }
+      body {
+      background: url("https://c4.wallpaperflare.com/wallpaper/273/755/675/fast-and-furious-dodge-charger-car-muscle-cars-wallpaper-preview.jpg") no-repeat center;
+      background-size: cover;
+      }
+      h1, h2 {
+      text-transform: uppercase;
+      font-weight: 1000;
+      }
+      h2 {
+      margin: 0 0 10 8px;
+      }
+      .main-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 25px;
+      background: rgba(0, 0, 0, 0.5); 
+      }
+      .left-part, form {
+      padding: 24px;
+      }
+      .left-part {
+      text-align: center;
+      }
+      .fa-graduation-cap {
+      font-size: 72px;
+     
+      }
+      form {
+      <!--background: rgba(0, 0, 0, 0.5); -->
+      size='a4'
+      }
+      .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      }
+      .info {
+      display: flex;
+      flex-direction: column;
+      }
+      input, select {
+      padding: 5px;
+      margin-bottom: 25px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #eee;
+      }
+      input::placeholder {
+      color: #eee;
+      }
+      option:focus {
+      border: None;
+      }
+      option {
+      background: black; 
+      border: none;
+      }
+      .checkbox input {
+      margin: 0 10px 0 0;
+      vertical-align: middle;
+      }
+      .checkbox a {
+      color: #26a9e0;
+      }
+      .checkbox a:hover {
+      color: #85d6de;
+      }
+      .btn-item, button {
+      padding: 10px 5px;
+      margin-top: 20px;
+      border-radius: 5px; 
+      border: none;
+      background: #26a9e0; 
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      color: #fff;
+      }
+      .btn-item {
+      display: inline-block;
+      margin: 20px 5px 0;
+      }
+      button {
+      width: 100%;
+      }
+      button:hover, .btn-item:hover {
+      background: #85d6de;
+      }
+      @media (min-width: 568px) {
+      html, body {
+      height: 100%;
+      }
+      .main-block {
+      flex-direction: row;
+      height: calc(100% - 50px);
+      }
+      .left-part, form {
+      flex: 1;
+      height: auto;
+      }
+      }
+      
+      span {
+
+      font-family: sans-serif;
+      font-style: italic;
+      font-weight: bolder
+      }
+
+     #Brand > option[value="default"][disabled] {
+       color: darkgrey;
+    }
+    
+    
+      
+    </style>
+  </head>
+  <body>
+    <div class="main-block">
+      <div class="left-part">
+        <i class="fas fa-graduation-cap"></i>
+        <h1>Used Car Price Prediction</h1>
+        <p><span>® Find the best deal for your car</span> </p><br>
+        
+        <div class="btn-group">
+        <h3>{{ prediction_text }}</h3>
+        </div>
+      </div>
+      <form action="{{ url_for('predict')}}" method="post">
+        <div class="title">
+          <i class="fas fa-pencil-alt"></i> 
+          <h2>Car Specification</h2>
+        </div>
+        <div class="info">
+          <select name="Brand"  id="Brand" required="required">
+                                <option value="default"  selected="true" disabled>Select the car brand</option>
+                                <option value="Ambassador">Ambassador</option>
+                                <option value="Audi">Audi</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Bentley">Bentley</option>
+                                <option value="Chevrolet">Chevrolet</option>
+                                <option value="Datsun">Datsun</option>
+                                <option value="Fiat">Fiat</option>
+                                <option value="Force">Force</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="ISUZU">ISUZU</option>
+                                <option value="Jaguar">Jaguar</option>
+                                <option value="Jeep">Jeep</option>
+                                <option value="Lamborghini">Lamborghini</option>
+                                <option value="Land">Land</option>
+                                <option value="Mahindra">Mahindra</option>
+                                <option value="Maruti">Maruti</option>
+                                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                <option value="Mini">Mini</option>
+                                <option value="Mitsubishi">Mitsubishi</option>
+                                <option value="Nissan">Nissan</option>
+                                <option value="Porsche">Porsche</option>
+                                <option value="Renault">Renault</option>
+                                <option value="Skoda">Skoda</option>
+                                <option value="Smart">Smart</option>
+                                <option value="Tata">Tata</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Volvo">Volvo</option>
+
+          </select>
+          
+          <select name="cars" id="cars" required="required"  placeholder="Select the car">
+                <option value="default"  selected="true" disabled>Select the car</option>
+
+        </select>
+
+          
+          
+          <select name="Transmission"  id="Transmission" required="required">
+                                <option value="default" selected disabled>Select transmission type</option>
+                                <option value="Manual">Manual</option>
+                                <option value="Automatic">Automatic</option>
+          </select>
+          <select name="Fuel_Type"  id="Fuel_Type" required="required">
+                                <option value="default" selected disabled>Select fuel type</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="LPG">LPG</option>
+                                <option value="CNG">CNG</option>
+          </select>
+          <input name="Year" id="Year"  type="number" placeholder="Provide year  ex.2019" required="required">
+            <select name="owner"  id="owner" required="required">
+                                <option value="default" selected disabled>Select the owner type</option>
+                                <option value="one">First</option>
+                                <option value="two">Second</option>
+                                <option value="three">Third</option>
+                                <option value="fourandmore">Fourth and above</option>
+            </select>
+          <input name="Kilometers_Driven" id="Kilometers_Driven" type="number" placeholder="Kilometers_Driven (Kilometers)" required="required">
+          <input name="Mileage"  id="Mileage" type="number" placeholder="Mileage (Kilometer per Liter/kmpl)" required="required">
+          <input name="Engine"  id="Engine" type="number" placeholder="Engine (CC) ex.ranges(600 to 6000)" required="required">
+          <input name="Power"  id="Power" type="number" placeholder="Power (bhp) ex.ranges(0 to 500)" required="required">
+          <input name="Seats"  id="Seats" type="number" placeholder="Seats" required="required">
+
+          <select name="Location" id="Location" required="required"  placeholder="Location">
+                                <option value="default" selected disabled>Select the servicing location</option>
+                                <option value="Ahmedabad">Ahmedabad</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Chennai">Coimbatore</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Jaipur">Jaipur</option>
+                                <option value="Kochi ">Kochi </option>
+                                <option value="Kolkata ">Kolkata </option>
+                                <option value="Mumbai ">Mumbai </option>
+                                <option value="Pune ">Pune </option>
+                                
+          </select>
+                
+        </div>
+        <button type="submit" href="/">Calculate the Price</button>
+        <!--<h3>{{ prediction_text }}</h3>-->
+      </form>
+     
+    </div>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#Brand").change(function(){
+    var brand = $(this).val();
+    var names = [];
+    switch(brand) {
+        case 'Ambassador': {
+          names = ['Classic Nova Diesel'];
+          break;
+        }
+       case 'Audi':  {
+           names = ['A3 35', 'A4 1.8', 'A4 2.0', 'A4 3.0', 'A4 3.2', 'A4 30', 'A4 35',
+       'A4 New', 'A6 2.0', 'A6 2.7', 'A6 2.8', 'A6 2011-2015', 'A6 3.0',
+       'A6 35', 'A7 2011-2015', 'A8 L', 'Q3 2.0', 'Q3 2012-2015', 'Q3 30',
+       'Q3 35', 'Q5 2.0', 'Q5 2008-2012', 'Q5 3.0', 'Q5 30', 'Q7 3.0',
+       'Q7 35', 'Q7 4.2', 'Q7 45', 'RS5 Coupe', 'TT 2.0', 'TT 40'];
+          break;
+       }
+       
+        case 'BMW':  {
+           names = ['1 Series', '3 Series', '5 Series', '6 Series', '7 Series', 'X1 M',
+       'X1 sDrive', 'X1 sDrive20d', 'X1 xDrive', 'X3 xDrive',
+       'X3 xDrive20d', 'X3 xDrive30d', 'X5 2014-2019', 'X5 3.0d', 'X5 X5',
+       'X5 xDrive', 'X6 xDrive', 'X6 xDrive30d', 'Z4 2009-2013'];
+          break;
+       }
+       
+       case 'Bentley':  {
+           names = ['Continental Flying'];
+          break;
+       }
+       
+       case 'Chevrolet':  {
+           names = ['Aveo 1.4', 'Aveo 1.6', 'Aveo U-VA', 'Beat Diesel', 'Beat LS',
+       'Beat LT', 'Beat Option', 'Captiva LT', 'Captiva LTZ', 'Cruze LTZ',
+       'Enjoy 1.3', 'Enjoy 1.4', 'Enjoy Petrol', 'Enjoy TCDi',
+       'Optra 1.6', 'Optra Magnum', 'Sail 1.2', 'Sail Hatchback',
+       'Sail LT', 'Spark 1.0', 'Tavera LS', 'Tavera LT'];
+          break;
+       }
+       
+       case 'Datsun':  {
+           names = ['GO NXT', 'GO Plus', 'GO T', 'Redi GO', 'redi-GO S', 'redi-GO T'];
+          break;
+       }
+       
+       case 'Fiat':  {
+           names = ['Avventura MULTIJET', 'Grande Punto', 'Linea 1.3', 'Linea Classic',
+       'Linea Emotion', 'Linea T', 'Linea T-Jet', 'Petra 1.2',
+       'Punto EVO', 'Siena 1.2'];
+          break;
+       }
+       
+       case 'Force':  {
+           names = ['One LX'];
+          break;
+       }
+       
+       case 'Ford':  {
+           names = ['Aspire Ambiente', 'Aspire Titanium', 'Classic 1.4',
+       'EcoSport 1.0', 'EcoSport 1.5', 'Ecosport 1.0', 'Ecosport 1.5',
+       'Ecosport Signature', 'Endeavour 2.2', 'Endeavour 2.5L',
+       'Endeavour 3.0L', 'Endeavour 3.2', 'Endeavour 4x2',
+       'Endeavour Hurricane', 'Endeavour Titanium', 'Endeavour XLT',
+       'Fiesta 1.4', 'Fiesta 1.5', 'Fiesta 1.6', 'Fiesta Classic',
+       'Fiesta Diesel', 'Fiesta EXi', 'Fiesta Titanium', 'Figo 1.2P',
+       'Figo 1.5D', 'Figo 2015-2019', 'Figo Aspire', 'Figo Diesel',
+       'Figo Petrol', 'Figo Titanium', 'Freestyle Titanium',
+       'Fusion Plus', 'Ikon 1.3', 'Ikon 1.4', 'Ikon 1.6', 'Mustang V8'];
+          break;
+       }
+       
+       case 'Honda':  {
+           names = ['Accord 2.4', 'Accord 2001-2003', 'Accord V6', 'Accord VTi-L',
+       'Amaze E', 'Amaze EX', 'Amaze S', 'Amaze SX', 'Amaze V',
+       'Amaze VX', 'BR-V i-DTEC', 'BR-V i-VTEC', 'BRV i-VTEC', 'Brio 1.2',
+       'Brio E', 'Brio EX', 'Brio S', 'Brio V', 'Brio VX', 'CR-V 2.0',
+       'CR-V 2.0L', 'CR-V 2.4', 'CR-V 2.4L', 'CR-V Petrol', 'CR-V RVi',
+       'CR-V Sport', 'City 1.3', 'City 1.5', 'City Corporate', 'City V',
+       'City ZX', 'City i', 'City i-DTEC', 'City i-VTEC',
+       'Civic 2006-2010', 'Civic 2010-2013', 'Jazz 1.2', 'Jazz 1.5',
+       'Jazz Active', 'Jazz Exclusive', 'Jazz Mode', 'Jazz S',
+       'Jazz Select', 'Jazz V', 'Jazz VX', 'Mobilio E', 'Mobilio RS',
+       'Mobilio S', 'Mobilio V', 'WR-V Edge', 'WRV i-VTEC'];
+          break;
+       }
+       
+        case 'Hyundai':  {
+           names = ['Accent CRDi', 'Accent Executive', 'Accent GLE', 'Accent GLS',
+       'Creta 1.4', 'Creta 1.6', 'EON 1.0', 'EON D', 'EON Era', 'EON LPG',
+       'EON Magna', 'EON Sportz', 'Elantra 1.6', 'Elantra 2.0',
+       'Elantra CRDi', 'Elantra SX', 'Elite i20', 'Getz 1.3', 'Getz 1.5',
+       'Getz GLE', 'Getz GLS', 'Getz GVS', 'Grand i10', 'Santa Fe',
+       'Santro AT', 'Santro D', 'Santro DX', 'Santro GLS', 'Santro GS',
+       'Santro LP', 'Santro LS', 'Santro Xing', 'Sonata 2.4',
+       'Sonata Embera', 'Sonata GOLD', 'Sonata Transform', 'Tucson 2.0',
+       'Tucson CRDi', 'Verna 1.4', 'Verna 1.6', 'Verna CRDi', 'Verna SX',
+       'Verna Transform', 'Verna VTVT', 'Verna XXi', 'Verna Xi',
+       'Xcent 1.1', 'Xcent 1.2', 'i10 Asta', 'i10 Era', 'i10 Magna',
+       'i10 Magna(O)', 'i10 Sportz', 'i20 1.2', 'i20 1.4',
+       'i20 2015-2017', 'i20 Active', 'i20 Asta', 'i20 Diesel', 'i20 Era',
+       'i20 Magna', 'i20 Sportz'];
+          break;
+       }
+       
+       case 'ISUZU':  {
+           names = ['D-MAX V-Cross','MUX 4WD'];
+          break;
+       }
+       
+       case 'Jaguar':  {
+           names = ['F Type', 'XE 2.0L', 'XE Portfolio', 'XF 2.0', 'XF 2.2', 'XF 3.0',
+       'XF Aero', 'XF Diesel', 'XJ 2.0L', 'XJ 3.0L', 'XJ 5.0'];
+          break;
+       }
+       
+       case 'Jeep':  {
+           names = ['Compass 1.4', 'Compass 2.0'];
+          break;
+       }
+       
+       case 'Lamborghini':  {
+           names =['Gallardo Coupe'];
+          break;
+       }
+        
+        case 'Land':  {
+           names =['Rover Discovery', 'Rover Freelander', 'Rover Range'];
+          break;
+       }
+       
+        case 'Mahindra':  {
+           names =['Bolero DI', 'Bolero SLE', 'Bolero SLX', 'Bolero VLX',
+       'Bolero ZLX', 'Bolero mHAWK', 'Jeep MM', 'KUV 100', 'Logan Diesel',
+       'Logan Petrol', 'NuvoSport N6', 'NuvoSport N8', 'Quanto C2',
+       'Quanto C4', 'Quanto C6', 'Quanto C8', 'Renault Logan',
+       'Scorpio 1.99', 'Scorpio 2.6', 'Scorpio 2009-2014', 'Scorpio DX',
+       'Scorpio LX', 'Scorpio S10', 'Scorpio S2', 'Scorpio S4',
+       'Scorpio S6', 'Scorpio S8', 'Scorpio SLE', 'Scorpio SLX',
+       'Scorpio VLX', 'Ssangyong Rexton', 'TUV 300', 'Thar CRDe',
+       'Thar DI', 'Verito 1.5', 'XUV300 W8', 'XUV500 AT', 'XUV500 W10',
+       'XUV500 W4', 'XUV500 W6', 'XUV500 W7', 'XUV500 W8', 'XUV500 W9',
+       'Xylo D2', 'Xylo D4', 'Xylo E2', 'Xylo E4', 'Xylo E8', 'Xylo H4'];
+          break;
+       }
+       
+        case 'Maruti':  {
+           names =['1000 AC', '800 AC', '800 DX', '800 Std', 'A-Star AT',
+       'A-Star Lxi', 'A-Star Vxi', 'Alto 800', 'Alto Green', 'Alto K10',
+       'Alto LX', 'Alto LXI', 'Alto LXi', 'Alto Std', 'Alto VXi',
+       'Alto Vxi', 'Baleno Alpha', 'Baleno Delta', 'Baleno LXI',
+       'Baleno RS', 'Baleno Sigma', 'Baleno Vxi', 'Baleno Zeta',
+       'Celerio CNG', 'Celerio LDi', 'Celerio LXI', 'Celerio VXI',
+       'Celerio ZDi', 'Celerio ZXI', 'Ciaz 1.3', 'Ciaz 1.4', 'Ciaz AT',
+       'Ciaz Alpha', 'Ciaz RS', 'Ciaz VDI', 'Ciaz VDi', 'Ciaz VXi',
+       'Ciaz ZDi', 'Ciaz ZXi', 'Ciaz Zeta', 'Dzire AMT', 'Dzire LDI',
+       'Dzire New', 'Dzire VDI', 'Dzire VXI', 'Dzire ZDI', 'Eeco 5',
+       'Eeco 7', 'Eeco CNG', 'Eeco Smiles', 'Ertiga LXI', 'Ertiga Paseo',
+       'Ertiga SHVS', 'Ertiga VDI', 'Ertiga VXI', 'Ertiga ZDI',
+       'Ertiga ZXI', 'Esteem LX', 'Esteem Vxi', 'Estilo LXI',
+       'Grand Vitara', 'Ignis 1.2', 'Ignis 1.3', 'Omni 5', 'Omni 8',
+       'Omni E', 'Omni MPI', 'Ritz AT', 'Ritz LDi', 'Ritz LXI',
+       'Ritz LXi', 'Ritz VDI', 'Ritz VDi', 'Ritz VXI', 'Ritz VXi',
+       'Ritz ZDi', 'Ritz ZXI', 'Ritz ZXi', 'S Cross', 'S-Cross Alpha',
+       'S-Cross Delta', 'S-Cross Zeta', 'SX4 Green', 'SX4 S', 'SX4 VDI',
+       'SX4 Vxi', 'SX4 ZDI', 'SX4 ZXI', 'SX4 Zxi', 'Swift AMT',
+       'Swift DDiS', 'Swift Dzire', 'Swift LDI', 'Swift LXI', 'Swift LXi',
+       'Swift Ldi', 'Swift Lxi', 'Swift RS', 'Swift VDI', 'Swift VDi',
+       'Swift VVT', 'Swift VXI', 'Swift VXi', 'Swift Vdi', 'Swift ZDI',
+       'Swift ZDi', 'Swift ZXI', 'Versa DX2', 'Vitara Brezza', 'Wagon R',
+       'Zen Estilo', 'Zen LX', 'Zen LXI', 'Zen LXi', 'Zen VX', 'Zen VXI',
+       'Zen VXi'];
+          break;
+       }
+       
+       
+        case 'Mercedes-Benz':  {
+           names =['A Class', 'B Class', 'C-Class Progressive', 'CLA 200',
+       'CLS-Class 2006-2010', 'E-Class 200', 'E-Class 2009-2013',
+       'E-Class 2015-2017', 'E-Class 220', 'E-Class 230', 'E-Class 250',
+       'E-Class 280', 'E-Class E', 'E-Class E250', 'E-Class E270',
+       'E-Class E350', 'E-Class E400', 'E-Class Facelift',
+       'GL-Class 2007', 'GL-Class 350', 'GLA Class', 'GLC 220',
+       'GLC 220d', 'GLC 43', 'GLE 250d', 'GLE 350d', 'GLS 350d',
+       'M-Class ML', 'New C-Class', 'R-Class R350', 'S Class',
+       'S-Class 280', 'S-Class 320', 'S-Class S', 'SL-Class SL', 'SLC 43',
+       'SLK-Class 55', 'SLK-Class SLK'];
+          break;
+       }
+       
+        case 'Mini':  {
+           names =['Clubman Cooper', 'Cooper 3', 'Cooper 5', 'Cooper Convertible',
+       'Cooper Countryman', 'Cooper S', 'Countryman Cooper'];
+          break;
+       }
+       
+        case 'Mitsubishi':  {
+           names =['Cedia Sports', 'Lancer 1.5', 'Lancer GLXD', 'Montero 3.2',
+       'Outlander 2.4', 'Pajero 2.8', 'Pajero 4X4', 'Pajero Sport'];
+          break;
+       }
+       
+         case 'Nissan':  {
+           names =['Evalia 2013', 'Micra Active', 'Micra Diesel', 'Micra XE',
+       'Micra XL', 'Micra XV', 'Sunny 2011-2014', 'Sunny Diesel',
+       'Sunny XE', 'Sunny XL', 'Sunny XV', 'Teana 230jM', 'Teana XV',
+       'Terrano XL', 'Terrano XV', 'X-Trail SLX'];
+          break;
+       }
+       
+       
+        case 'Porsche':  {
+           names =['Boxster S', 'Cayenne 2009-2014', 'Cayenne Base', 'Cayenne Diesel',
+       'Cayenne S', 'Cayenne Turbo', 'Cayman 2009-2012', 'Panamera 2010',
+       'Panamera Diesel'];
+          break;
+       }
+       
+       case 'Renault':  {
+           names =['Captur 1.5', 'Duster 110PS', 'Duster 85PS', 'Duster Adventure',
+       'Duster Petrol', 'Duster RXZ', 'Fluence 1.5', 'Fluence 2.0',
+       'Fluence Diesel', 'KWID 1.0', 'KWID AMT', 'KWID Climber',
+       'KWID RXL', 'KWID RXT', 'Koleos 2.0', 'Lodgy 110PS',
+       'Pulse Petrol', 'Pulse RxL', 'Scala Diesel', 'Scala RxL'];
+          break;
+       }
+         
+        
+     case 'Skoda':  {
+           names =['Fabia 1.2', 'Fabia 1.2L', 'Fabia 1.4', 'Fabia 1.6', 'Laura 1.8',
+       'Laura 1.9', 'Laura Ambiente', 'Laura Ambition', 'Laura Classic',
+       'Laura Elegance', 'Laura L', 'Laura RS', 'Octavia 1.9',
+       'Octavia 2.0', 'Octavia Ambiente', 'Octavia Ambition',
+       'Octavia Classic', 'Octavia Elegance', 'Octavia L', 'Octavia RS',
+       'Octavia Rider', 'Octavia Style', 'Rapid 1.5', 'Rapid 1.6',
+       'Rapid 2013-2016', 'Rapid Leisure', 'Rapid Ultima', 'Superb 1.8',
+       'Superb 2.5', 'Superb 2.8', 'Superb 2009-2014', 'Superb 3.6',
+       'Superb Ambition', 'Superb Elegance', 'Superb L&K', 'Superb Style',
+       'Yeti Ambition', 'Yeti Elegance'];
+          break;
+       }
+       
+       case 'Smart':  {
+           names =['Fortwo CDI'];
+          break;
+       }
+       
+       case 'Tata':  {
+           names =['Bolt Quadrajet', 'Bolt Revotron', 'Hexa XT', 'Hexa XTA',
+       'Indica DLS', 'Indica GLS', 'Indica LEI', 'Indica V2',
+       'Indica Vista', 'Indigo CS', 'Indigo GLE', 'Indigo LS',
+       'Indigo LX', 'Indigo XL', 'Indigo eCS', 'Manza Aqua', 'Manza Aura',
+       'Manza Club', 'Manza ELAN', 'Nano CX', 'Nano Cx', 'Nano LX',
+       'Nano Lx', 'Nano STD', 'Nano Twist', 'Nano XT', 'Nano XTA',
+       'New Safari', 'Nexon 1.2', 'Nexon 1.5', 'Safari DICOR',
+       'Safari Storme', 'Sumo DX', 'Sumo Delux', 'Sumo EX', 'Tiago 1.2',
+       'Tiago AMT', 'Tiago Wizz', 'Tigor 1.05', 'Tigor 1.2', 'Tigor XE',
+       'Venture EX', 'Xenon XT', 'Zest Quadrajet', 'Zest Revotron'];
+          break;
+       } 
+       
+       
+       
+       case 'Toyota':  {
+           names =['Camry 2.5', 'Camry A/T', 'Camry Hybrid', 'Camry W2', 'Camry W4',
+       'Corolla 1.8', 'Corolla Altis', 'Corolla DX', 'Corolla Executive',
+       'Corolla H2', 'Corolla H4', 'Corolla H5', 'Etios 1.4',
+       'Etios Cross', 'Etios G', 'Etios GD', 'Etios Liva', 'Etios Petrol',
+       'Etios V', 'Etios VD', 'Etios VX', 'Etios VXD', 'Fortuner 2.8',
+       'Fortuner 3.0', 'Fortuner 4x2', 'Fortuner 4x4', 'Fortuner TRD',
+       'Innova 2.0', 'Innova 2.5', 'Innova Crysta', 'Platinum Etios',
+       'Qualis FS', 'Qualis Fleet', 'Qualis RS'];
+          break;
+       }
+       
+       case 'Volkswagen':  {
+           names =['Ameo 1.2', 'Ameo 1.5', 'Beetle 2.0', 'CrossPolo 1.5',
+       'Jetta 2007-2011', 'Jetta 2012-2014', 'Jetta 2013-2015',
+       'Passat 1.8', 'Passat 2.0', 'Passat Diesel', 'Passat Highline',
+       'Polo 1.0', 'Polo 1.2', 'Polo 1.5', 'Polo Diesel', 'Polo GT',
+       'Polo GTI', 'Polo IPL', 'Polo Petrol', 'Tiguan 2.0', 'Vento 1.2',
+       'Vento 1.5', 'Vento 1.6', 'Vento 2013-2015', 'Vento Diesel',
+       'Vento IPL', 'Vento Konekt', 'Vento Magnific', 'Vento Petrol',
+       'Vento Sport', 'Vento TSI'];
+          break;
+       }
+       
+       
+       case 'Volvo':  {
+           names =['S60 D3', 'S60 D4', 'S60 D5', 'S80 2006-2013', 'S80 D5',
+       'V40 Cross', 'V40 D3', 'XC60 D4', 'XC60 D5', 'XC90 2007-2015'];
+          break;
+       }
+       
+       
+       
+       
+       
+       
+    }
+    if(names.length > 0) {
+        var listItems = '<option value="Select the Car" selected disabled>Select the Car</option>';
+        names.forEach(function(car) {
+            listItems += '<option value="'+car+'">'+car+'</option>';
+        });
+        $('#cars').html(listItems);
+    }
+  });
+});
+</script>
+  </body>
+</html>
